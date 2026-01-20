@@ -1,0 +1,17 @@
+/*
+ * Display.c
+ *
+ * Created: 20/01/2026 09:26:09
+ *  Author: samur
+ */ 
+#include "Display.h"
+
+uint8_t seg7_table[] = {
+	0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07,
+	0x7F, 0x67, 0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71
+};
+
+
+uint8_t seg7_convert(uint8_t num) {
+	return seg7_table[num];
+}

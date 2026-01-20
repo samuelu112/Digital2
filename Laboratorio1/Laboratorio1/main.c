@@ -4,38 +4,33 @@
  * Created: 15/01/2026 19:09:38
  * Author : samur
  */ 
-#define F_CPU 16000000
+#define F_CPU 16000000UL
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include "Display/Display.h"
 
 uint8_t contador = 5;
 uint8_t botones;
-uint16_t tima = 0;
-uint8_t contar = 0;
-
-uint8_t seg7_table[] = {
-	0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07,
-	0x7F, 0x67, 0x77, 0x7C, 0x39, 0x5E, 0x79, 0x71
-};
-
-uint8_t display_digit;
+volatile uint8_t timer_activo = 0;
 
 ISR(PCINT1_vect) {
-	botones = PINC & ((1 << PC0) | (1 << PC1));
+	botones = PINC & 0x03;
 	TCNT0 = 255;
-	TCCR0B = (1 << CS02) | (1 << CS00);
+	TCCR0B = (1 << CS02) | (1 << CS00);  // Prescaler 1024
 	PCICR &= ~(1 << PCIE1);
 }
 
 ISR(TIMER0_OVF_vect) {
 	TCCR0B = 0;
-	uint8_t estadoa = PINC & ((1 << PC0) | (1 << PC1));
+	uint8_t estado = PINC & 0x03;
 	
-	if (estadoa == botones) {
-		if (estadoa & (1 << PC0)) {
-			TCCR1B = (1 << CS12);
-			TCNT1 = 49911;
-		}
+	if (estado == botones && estado & 0x01 && !timer_activo) {
+		// Iniciar Timer1
+		TCCR1B = (1 << WGM12) | (1 << CS12);  // CTC, prescaler 256
+		OCR1A = 62499;
+		TCNT1 = 0;
+		TIMSK1 |= (1 << OCIE1A);
+		timer_activo = 1;
 	}
 	PCICR |= (1 << PCIE1);
 }
@@ -43,38 +38,34 @@ ISR(TIMER0_OVF_vect) {
 ISR(TIMER1_COMPA_vect) {
 	if (contador > 0) {
 		contador--;
-		display_digit = seg7_table[contador];
-		PORTD = display_digit;
+		PORTD = seg7_convert(contador);
 	}
 	
 	if (contador == 0) {
 		TCCR1B = 0;
+		TIMSK1 &= ~(1 << OCIE1A);
+		timer_activo = 0;
 	}
 }
 
 int main(void) {
+	// Display
 	DDRD = 0xFF;
-	DDRC &= ~0x03;
-	PORTC |= 0x03;
+	PORTD = seg7_convert(contador);
 	
-	//Configuración del Timer1 para modo CTC 
-	TCCR1A = 0;
-	TCCR1B = (1 << WGM12);
-	OCR1A = 62499;
+	// Botones
+	DDRC &= ~0x03;  // PC0 y PC1 como entradas
+	PORTC |= 0x03;  // Pull-ups
 	
-	TIMSK1 = (1 << OCIE1A);
-	
-	// Configuración para antirebote
+	// Configurar interrupciones
 	PCICR |= (1 << PCIE1);
-	PCMSK1 |= (1 << PC0) | (1 << PC1);
+	PCMSK1 |= 0x03;
 	TIMSK0 |= (1 << TOIE0);
+	TIMSK1 &= ~(1 << OCIE1A);
 	
 	sei();
 	
-	display_digit = seg7_table[contador];
-	PORTD = display_digit;
-	
 	while (1) {
+		// Bucle principal
 	}
 }
-

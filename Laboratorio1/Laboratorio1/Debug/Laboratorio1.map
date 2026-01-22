@@ -22,11 +22,6 @@ Discarded input sections
  .text          0x00000000        0x0 main.o
  .data          0x00000000        0x0 main.o
  .bss           0x00000000        0x0 main.o
- .bss.ganador   0x00000000        0x1 main.o
- .data.juego    0x00000000        0x1 main.o
- .bss.timer_activo
-                0x00000000        0x1 main.o
- .data.meta     0x00000000        0x1 main.o
  .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
@@ -203,7 +198,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x2f8
+.text           0x00000000      0x40c
  *(.vectors)
  .vectors       0x00000000       0x68 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
                 0x00000000                __vector_default
@@ -291,27 +286,27 @@ END GROUP
                 0x000000a6        0xc Display/Display.o
                 0x000000a6                seg7_convert
  .text.marcador1
-                0x000000b2       0x50 main.o
+                0x000000b2       0x46 main.o
                 0x000000b2                marcador1
  .text.marcador2
-                0x00000102       0x44 main.o
-                0x00000102                marcador2
+                0x000000f8       0x3a main.o
+                0x000000f8                marcador2
  .text.__vector_4
-                0x00000146       0x3a main.o
-                0x00000146                __vector_4
+                0x00000132       0xae main.o
+                0x00000132                __vector_4
  .text.__vector_16
-                0x00000180       0xbc main.o
-                0x00000180                __vector_16
+                0x000001e0      0x13e main.o
+                0x000001e0                __vector_16
  .text.__vector_11
-                0x0000023c       0x72 main.o
-                0x0000023c                __vector_11
- .text.main     0x000002ae       0x46 main.o
-                0x000002ae                main
-                0x000002f4                . = ALIGN (0x2)
+                0x0000031e       0x94 main.o
+                0x0000031e                __vector_11
+ .text.main     0x000003b2       0x56 main.o
+                0x000003b2                main
+                0x00000408                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000002f4        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
-                0x000002f4                _exit
-                0x000002f4                exit
+ .fini9         0x00000408        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                0x00000408                _exit
+                0x00000408                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -330,49 +325,62 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000002f4        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .fini0         0x00000408        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x000002f8                _etext = .
+                0x0000040c                _etext = .
 
-.data           0x00800100       0x12 load address 0x000002f8
+.data           0x00800100       0x14 load address 0x0000040c
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
  .data.seg7_table
                 0x00800100       0x10 Display/Display.o
                 0x00800100                seg7_table
- .data.contador
+ .data.boton_estado_anterior
                 0x00800110        0x1 main.o
-                0x00800110                contador
+                0x00800110                boton_estado_anterior
+ .data.meta     0x00800111        0x1 main.o
+                0x00800111                meta
+ .data.contador
+                0x00800112        0x1 main.o
+                0x00800112                contador
  *(.gnu.linkonce.d*)
  *(.rodata)
  *(.rodata*)
  *(.gnu.linkonce.r*)
-                0x00800112                . = ALIGN (0x2)
- *fill*         0x00800111        0x1 
-                0x00800112                _edata = .
-                0x00800112                PROVIDE (__data_end, .)
+                0x00800114                . = ALIGN (0x2)
+ *fill*         0x00800113        0x1 
+                0x00800114                _edata = .
+                0x00800114                PROVIDE (__data_end, .)
 
-.bss            0x00800112        0x3
-                0x00800112                PROVIDE (__bss_start, .)
+.bss            0x00800114        0x6
+                0x00800114                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
- .bss.j2        0x00800112        0x1 main.o
-                0x00800112                j2
- .bss.j1        0x00800113        0x1 main.o
-                0x00800113                j1
+ .bss.ganador   0x00800114        0x1 main.o
+                0x00800114                ganador
+ .bss.estado_juego
+                0x00800115        0x1 main.o
+                0x00800115                estado_juego
+ .bss.j2        0x00800116        0x1 main.o
+                0x00800116                j2
+ .bss.j1        0x00800117        0x1 main.o
+                0x00800117                j1
+ .bss.timer_activo
+                0x00800118        0x1 main.o
+                0x00800118                timer_activo
  *(COMMON)
- COMMON         0x00800114        0x1 main.o
-                0x00800114                botones
-                0x00800115                PROVIDE (__bss_end, .)
-                0x000002f8                __data_load_start = LOADADDR (.data)
-                0x0000030a                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00800119        0x1 main.o
+                0x00800119                botones
+                0x0080011a                PROVIDE (__bss_end, .)
+                0x0000040c                __data_load_start = LOADADDR (.data)
+                0x00000420                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800115        0x0
+.noinit         0x0080011a        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x00800115                _end = .
+                0x0080011a                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -448,41 +456,41 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0x90d
+.debug_info     0x00000000      0x8dd
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x5f4 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_info    0x000005f4       0xc4 Display/Display.o
- .debug_info    0x000006b8      0x255 main.o
+ .debug_info    0x000006b8      0x225 main.o
 
-.debug_abbrev   0x00000000      0x751
+.debug_abbrev   0x00000000      0x73d
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x5a2 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_abbrev  0x000005a2       0x87 Display/Display.o
- .debug_abbrev  0x00000629      0x128 main.o
+ .debug_abbrev  0x00000629      0x114 main.o
 
-.debug_line     0x00000000      0x460
+.debug_line     0x00000000      0x5b6
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x134 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_line    0x00000134       0xb0 Display/Display.o
- .debug_line    0x000001e4      0x27c main.o
+ .debug_line    0x000001e4      0x3d2 main.o
 
-.debug_frame    0x00000000      0x144
+.debug_frame    0x00000000      0x148
  *(.debug_frame)
  .debug_frame   0x00000000       0x24 Display/Display.o
- .debug_frame   0x00000024      0x120 main.o
+ .debug_frame   0x00000024      0x124 main.o
 
-.debug_str      0x00000000      0x40d
+.debug_str      0x00000000      0x431
  *(.debug_str)
  .debug_str     0x00000000      0x208 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.7.374/gcc/dev/atmega328p/avr5/crtatmega328p.o
  .debug_str     0x00000208      0x17c Display/Display.o
                                 0x1b0 (size before relaxing)
- .debug_str     0x00000384       0x89 main.o
-                                0x21b (size before relaxing)
+ .debug_str     0x00000384       0xad main.o
+                                0x234 (size before relaxing)
 
-.debug_loc      0x00000000      0x236
+.debug_loc      0x00000000      0x24f
  *(.debug_loc)
  .debug_loc     0x00000000       0x21 Display/Display.o
- .debug_loc     0x00000021      0x215 main.o
+ .debug_loc     0x00000021      0x22e main.o
 
 .debug_macinfo
  *(.debug_macinfo)

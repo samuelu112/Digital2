@@ -6,3 +6,5 @@ LCD\lcd.c
 
 main.c
 
+UART\UART.c
+

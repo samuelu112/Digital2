@@ -6,69 +6,66 @@
  */ 
 #include "lcd.h"
 
-// Enviar comando
-void LCD_CMD(char cmd)
+static void LCD_PulseEnable(void)
 {
-	PORTC &= ~RS;        // RS = 0 (comando)
-	PORTD = cmd;        // Mandar comando al puerto D
-
-	PORTC |= E;         // E = 1
-	_delay_ms(4);
-	PORTC &= ~E;        // E = 0
+	PORTC |= E;
+	_delay_us(1);
+	PORTC &= ~E;
+	_delay_ms(2);
 }
 
-// Enviar caracter
+static void LCD_WriteByte(uint8_t data)
+{
+	// D0–D3 -> PB0–PB3
+	PORTB = (PORTB & 0xF0) | (data & 0x0F);
+
+	// D4–D7 -> PD4–PD7
+	PORTD = (PORTD & 0x0F) | (data & 0xF0);
+
+	LCD_PulseEnable();
+}
+
+void LCD_CMD(uint8_t cmd)
+{
+	PORTC &= ~RS;
+	LCD_WriteByte(cmd);
+}
+
 void LCD_Char(char data)
 {
-	PORTC |= RS;        // RS = 1 (dato)
-	PORTD = data;
-
-	PORTC |= E;
-	_delay_ms(4);
-	PORTC &= ~E;
+	PORTC |= RS;
+	LCD_WriteByte(data);
 }
 
-// Enviar texto
-void LCD_String(char *str)
+void LCD_String(const char *str)
 {
-	while(*str)
-	{
-		LCD_Char(*str++);
-	}
+	while (*str)
+	LCD_Char(*str++);
 }
 
-// Limpiar pantalla
 void LCD_Clear(void)
 {
 	LCD_CMD(0x01);
 	_delay_ms(2);
 }
 
-// Posicionar cursor
-void LCD_SetCursor(uint8_t row, uint8_t col)
+void LCD_SetCursor(uint8_t fila, uint8_t col)
 {
-	uint8_t pos;
-
-	if(row == 0)
-	pos = 0x80 + col;
-	else
-	pos = 0xC0 + col;
-
+	uint8_t pos = (fila == 0) ? (0x80 + col) : (0xC0 + col);
 	LCD_CMD(pos);
 }
 
-// Inicialización LCD 8 bits
 void LCD_Init(void)
 {
-	DDRD = 0xFF;          // Puerto D como salida (D0–D7)
-	DDRC |= RS | E;      // PC0 y PC1 como salida
+	DDRB |= 0x0F;        // PB0–PB3 salida
+	DDRD |= 0xF0;        // PD4–PD7 salida
+	DDRC |= RS | E;     // RS y E
 
-	PORTC = 0x00;
+	PORTC &= ~(RS | E);
 
 	_delay_ms(20);
-
-	LCD_CMD(0x38);  // 8 bits, 2 líneas, 5x8
-	LCD_CMD(0x0C);  // Display ON, cursor OFF
-	LCD_CMD(0x06);  // Auto incremento
-	LCD_CMD(0x01);  // Limpiar pantalla
+	LCD_CMD(0x38);      // 8 bits, 2 líneas
+	LCD_CMD(0x0C);      // Display ON
+	LCD_CMD(0x06);      // Auto incremento
+	LCD_CMD(0x01);      // Clear
 }

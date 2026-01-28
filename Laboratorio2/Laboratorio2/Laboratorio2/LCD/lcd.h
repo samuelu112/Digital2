@@ -13,16 +13,14 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-// Pines de control (Puerto C)
-#define RS (1<<PC0)
-#define E  (1<<PC1)
+#define RS (1 << PC0)
+#define E  (1 << PC1)
 
-// Prototipos
 void LCD_Init(void);
-void LCD_CMD(char cmd);
+void LCD_CMD(uint8_t cmd);
 void LCD_Char(char data);
-void LCD_String(char *str);
+void LCD_String(const char *str);
 void LCD_Clear(void);
-void LCD_SetCursor(uint8_t row, uint8_t col);
+void LCD_SetCursor(uint8_t fila, uint8_t col);
 
 #endif /* LCD_H_ */

@@ -8,19 +8,22 @@
 #define F_CPU 16000000UL
 #include <avr/io.h>
 #include <util/delay.h>
+#include <avr/interrupt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "LCD/lcd.h"
 #include "UART/UART.h"
 
 uint16_t leerADC(uint8_t canal);
-uint8_t contador;
-char uart_rx;
+uint8_t contador=0;
+uint16_t adc1, adc2;
+uint16_t milivoltios;
+char texto1[8];
+char texto2[10];
+char texto3[6];
 int main(void)
 {
-	uint16_t adc1, adc2;
-	uint16_t milivoltios;
-	char texto[16];
+	cli();
 
 	DDRC &= ~((1 << PC2) | (1 << PC3)); // ADC2 y ADC3
 
@@ -29,42 +32,44 @@ int main(void)
 
 	LCD_SetCursor(0,0);
 	LCD_String("S1:   S2:    S3:");
-
+	sei();
 	while (1)
 	{
-		// POT1 -> Voltaje
+		//POT1 -> Voltaje
 		adc1 = leerADC(2);
 		milivoltios = (adc1 * 5000UL) / 1023;
 
-		sprintf(texto, "%u.%02uV", milivoltios / 1000, (milivoltios % 1000) / 10);
+		sprintf(texto1, "%u.%02uV", milivoltios / 1000, (milivoltios % 1000) / 10);
 
 		LCD_SetCursor(1,6);
 		LCD_String("     ");
 		LCD_SetCursor(1,6);
-		LCD_String(texto);
+		LCD_String(texto1);
 
-		// POT2 -> Decimal
+		//POT2 -> Decimal
 		adc2 = leerADC(3);
-		sprintf(texto, "%4u", adc2);
+		sprintf(texto2, "%4u", adc2);
 
-		LCD_SetCursor(1,2);
+		LCD_SetCursor(1,0);
 		LCD_String("    ");
-		LCD_SetCursor(1,2);
-		LCD_String(texto);
+		LCD_SetCursor(1,0);
+		LCD_String(texto2);
 
-		if (uart_rx == '+') {
+		char c = UART_GetChar();
+		if (c == '+') {
 			contador++;
-			uart_rx = 0;
 		}
-		else if (uart_rx == '-') {
+		else if (c == '-') {
 			contador--;
-			uart_rx = 0;
 		}
 
-		// --- LCD S3 ---
-		sprintf(texto, "%3d", contador);
+		//S3
+		sprintf(texto3, "%3d", contador);
 		LCD_SetCursor(1,12);
-		LCD_String(texto);
+		LCD_String("   ");     // limpia
+		LCD_SetCursor(1,12);
+		LCD_String(texto3);
+		
 		_delay_ms(300);
 	}
 }

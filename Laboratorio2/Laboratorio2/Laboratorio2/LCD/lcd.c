@@ -16,10 +16,8 @@ static void LCD_PulseEnable(void)
 
 static void LCD_WriteByte(uint8_t data)
 {
-	// D0–D3 -> PB0–PB3
 	PORTB = (PORTB & 0xF0) | (data & 0x0F);
 
-	// D4–D7 -> PD4–PD7
 	PORTD = (PORTD & 0x0F) | (data & 0xF0);
 
 	LCD_PulseEnable();

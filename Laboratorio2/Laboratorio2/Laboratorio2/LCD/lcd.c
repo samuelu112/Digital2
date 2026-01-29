@@ -55,15 +55,15 @@ void LCD_SetCursor(uint8_t fila, uint8_t col)
 
 void LCD_Init(void)
 {
-	DDRB |= 0x0F;        // PB0–PB3 salida
-	DDRD |= 0xF0;        // PD4–PD7 salida
-	DDRC |= RS | E;     // RS y E
+	DDRB |= 0x0F;        //PB0–PB3 salida
+	DDRD |= 0xF0;        //PD4–PD7 salida
+	DDRC |= RS | E;     //RS y E
 
 	PORTC &= ~(RS | E);
 
 	_delay_ms(20);
-	LCD_CMD(0x38);      // 8 bits, 2 líneas
-	LCD_CMD(0x0C);      // Display ON
-	LCD_CMD(0x06);      // Auto incremento
-	LCD_CMD(0x01);      // Clear
+	LCD_CMD(0x38);      //8 bits, 2 líneas
+	LCD_CMD(0x0C);      //Display ON
+	LCD_CMD(0x06);      //Auto incremento
+	LCD_CMD(0x01);      //Clear
 }

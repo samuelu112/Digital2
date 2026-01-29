@@ -6,11 +6,14 @@
  */ 
 #define F_CPU 16000000UL
 #include <avr/io.h>
+#include <avr/interrupt.h>
 #include "UART.h"
 
 #define BAUD 9600
 #define UBRR_VAL ((F_CPU / 16 / BAUD) - 1)
-volatile char uart_rx;
+
+volatile char uart_buffer[UART_BUFFER_SIZE];
+volatile uint8_t uart_buffer_index = 0;
 
 void UART_Init(void)
 {
@@ -32,27 +35,33 @@ void UART_SendString(const char *str)
 	UART_SendChar(*str++);
 }
 
-volatile char uart_buffer[UART_BUFFER_SIZE];
-volatile uint8_t uart_buffer_index = 0;
-
 ISR(USART_RX_vect)
 {
 	char c = UDR0;
+	uint8_t oldSREG = SREG;  //Guarda estado de interrupciones
+	
 	if (uart_buffer_index < UART_BUFFER_SIZE - 1) {
 		uart_buffer[uart_buffer_index++] = c;
 	}
+	
+	SREG = oldSREG;
 }
 
 char UART_GetChar(void)
 {
 	char c = 0;
+	uint8_t oldSREG = SREG;  //Guarda estado de interrupciones
+	cli();
+	
 	if (uart_buffer_index > 0) {
 		c = uart_buffer[0];
-		// Desplazar el buffer
+		//Pra desplazar el buffer
 		for (uint8_t i = 1; i < uart_buffer_index; i++) {
 			uart_buffer[i-1] = uart_buffer[i];
 		}
 		uart_buffer_index--;
 	}
+	
+	SREG = oldSREG;
 	return c;
 }
